@@ -1,0 +1,479 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="qlthuvienModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Author">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="ntext" />
+        </EntityType>
+        <EntityType Name="Book">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="title" Type="ntext" />
+          <Property Name="description" Type="ntext" />
+          <Property Name="publisher_id" Type="int" />
+          <Property Name="published_date" Type="date" />
+          <Property Name="import_date" Type="date" />
+          <Property Name="quantity" Type="int" />
+          <Property Name="category_id" Type="int" />
+        </EntityType>
+        <EntityType Name="Book_Author">
+          <Key>
+            <PropertyRef Name="book_id" />
+            <PropertyRef Name="author_id" />
+          </Key>
+          <Property Name="book_id" Type="int" Nullable="false" />
+          <Property Name="author_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Borrow">
+          <Key>
+            <PropertyRef Name="reader_id" />
+            <PropertyRef Name="book_id" />
+            <PropertyRef Name="borrow_date" />
+          </Key>
+          <Property Name="reader_id" Type="int" Nullable="false" />
+          <Property Name="book_id" Type="int" Nullable="false" />
+          <Property Name="borrow_date" Type="date" Nullable="false" />
+          <Property Name="return_date" Type="date" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="ntext" />
+          <Property Name="description" Type="ntext" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="fullname" Type="ntext" />
+          <Property Name="gender" Type="nchar" MaxLength="10" />
+          <Property Name="birthday" Type="date" />
+          <Property Name="phone" Type="nchar" MaxLength="10" />
+          <Property Name="email" Type="ntext" />
+          <Property Name="username" Type="ntext" />
+          <Property Name="password" Type="ntext" />
+          <Property Name="address" Type="ntext" />
+          <Property Name="id_card_number" Type="nchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Publisher">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="ntext" />
+        </EntityType>
+        <EntityType Name="Reader">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="fullname" Type="ntext" />
+          <Property Name="gender" Type="nchar" MaxLength="10" />
+          <Property Name="birthday" Type="date" />
+          <Property Name="phone" Type="nchar" MaxLength="10" />
+          <Property Name="email" Type="ntext" />
+          <Property Name="is_member" Type="tinyint" />
+        </EntityType>
+        <Association Name="FK_Book_Author_Author">
+          <End Role="Author" Type="Self.Author" Multiplicity="1" />
+          <End Role="Book_Author" Type="Self.Book_Author" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Author">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Book_Author">
+              <PropertyRef Name="author_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Book_Author_Book">
+          <End Role="Book" Type="Self.Book" Multiplicity="1" />
+          <End Role="Book_Author" Type="Self.Book_Author" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Book">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Book_Author">
+              <PropertyRef Name="book_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Book_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Book" Type="Self.Book" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Book">
+              <PropertyRef Name="id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Book_Publisher">
+          <End Role="Publisher" Type="Self.Publisher" Multiplicity="0..1" />
+          <End Role="Book" Type="Self.Book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Publisher">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Book">
+              <PropertyRef Name="publisher_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Borrow_Book">
+          <End Role="Book" Type="Self.Book" Multiplicity="1" />
+          <End Role="Borrow" Type="Self.Borrow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Book">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Borrow">
+              <PropertyRef Name="book_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Borrow_Reader">
+          <End Role="Reader" Type="Self.Reader" Multiplicity="1" />
+          <End Role="Borrow" Type="Self.Borrow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reader">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Borrow">
+              <PropertyRef Name="reader_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="qlthuvienModelStoreContainer">
+          <EntitySet Name="Author" EntityType="Self.Author" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Book" EntityType="Self.Book" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Book_Author" EntityType="Self.Book_Author" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Borrow" EntityType="Self.Borrow" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Publisher" EntityType="Self.Publisher" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Reader" EntityType="Self.Reader" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Book_Author_Author" Association="Self.FK_Book_Author_Author">
+            <End Role="Author" EntitySet="Author" />
+            <End Role="Book_Author" EntitySet="Book_Author" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Book_Author_Book" Association="Self.FK_Book_Author_Book">
+            <End Role="Book" EntitySet="Book" />
+            <End Role="Book_Author" EntitySet="Book_Author" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Book_Category" Association="Self.FK_Book_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Book" EntitySet="Book" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Book_Publisher" Association="Self.FK_Book_Publisher">
+            <End Role="Publisher" EntitySet="Publisher" />
+            <End Role="Book" EntitySet="Book" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Borrow_Book" Association="Self.FK_Borrow_Book">
+            <End Role="Book" EntitySet="Book" />
+            <End Role="Borrow" EntitySet="Borrow" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Borrow_Reader" Association="Self.FK_Borrow_Reader">
+            <End Role="Reader" EntitySet="Reader" />
+            <End Role="Borrow" EntitySet="Borrow" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="qlthuvienModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Author">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Books" Relationship="Self.Book_Author" FromRole="Author" ToRole="Book" />
+        </EntityType>
+        <EntityType Name="Book">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="publisher_id" Type="Int32" />
+          <Property Name="published_date" Type="DateTime" Precision="0" />
+          <Property Name="import_date" Type="DateTime" Precision="0" />
+          <Property Name="quantity" Type="Int32" />
+          <Property Name="category_id" Type="Int32" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_Book_Category" FromRole="Book" ToRole="Category" />
+          <NavigationProperty Name="Publisher" Relationship="Self.FK_Book_Publisher" FromRole="Book" ToRole="Publisher" />
+          <NavigationProperty Name="Borrows" Relationship="Self.FK_Borrow_Book" FromRole="Book" ToRole="Borrow" />
+          <NavigationProperty Name="Authors" Relationship="Self.Book_Author" FromRole="Book" ToRole="Author" />
+        </EntityType>
+        <EntityType Name="Borrow">
+          <Key>
+            <PropertyRef Name="reader_id" />
+            <PropertyRef Name="book_id" />
+            <PropertyRef Name="borrow_date" />
+          </Key>
+          <Property Name="reader_id" Type="Int32" Nullable="false" />
+          <Property Name="book_id" Type="Int32" Nullable="false" />
+          <Property Name="borrow_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="return_date" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Book" Relationship="Self.FK_Borrow_Book" FromRole="Borrow" ToRole="Book" />
+          <NavigationProperty Name="Reader" Relationship="Self.FK_Borrow_Reader" FromRole="Borrow" ToRole="Reader" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Book" Relationship="Self.FK_Book_Category" FromRole="Category" ToRole="Book" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="fullname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="gender" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="birthday" Type="DateTime" Precision="0" />
+          <Property Name="phone" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="username" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="id_card_number" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Publisher">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Books" Relationship="Self.FK_Book_Publisher" FromRole="Publisher" ToRole="Book" />
+        </EntityType>
+        <EntityType Name="Reader">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="fullname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="gender" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="birthday" Type="DateTime" Precision="0" />
+          <Property Name="phone" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="is_member" Type="Byte" />
+          <NavigationProperty Name="Borrows" Relationship="Self.FK_Borrow_Reader" FromRole="Reader" ToRole="Borrow" />
+        </EntityType>
+        <Association Name="FK_Book_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Book" Type="Self.Book" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Book">
+              <PropertyRef Name="id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Book_Publisher">
+          <End Role="Publisher" Type="Self.Publisher" Multiplicity="0..1" />
+          <End Role="Book" Type="Self.Book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Publisher">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Book">
+              <PropertyRef Name="publisher_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Borrow_Book">
+          <End Role="Book" Type="Self.Book" Multiplicity="1" />
+          <End Role="Borrow" Type="Self.Borrow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Book">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Borrow">
+              <PropertyRef Name="book_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Borrow_Reader">
+          <End Role="Reader" Type="Self.Reader" Multiplicity="1" />
+          <End Role="Borrow" Type="Self.Borrow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reader">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Borrow">
+              <PropertyRef Name="reader_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Book_Author">
+          <End Role="Author" Type="Self.Author" Multiplicity="*" />
+          <End Role="Book" Type="Self.Book" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="qlthuvienEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Authors" EntityType="Self.Author" />
+          <EntitySet Name="Books" EntityType="Self.Book" />
+          <EntitySet Name="Borrows" EntityType="Self.Borrow" />
+          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="Employees" EntityType="Self.Employee" />
+          <EntitySet Name="Publishers" EntityType="Self.Publisher" />
+          <EntitySet Name="Readers" EntityType="Self.Reader" />
+          <AssociationSet Name="FK_Book_Category" Association="Self.FK_Book_Category">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Book" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Book_Publisher" Association="Self.FK_Book_Publisher">
+            <End Role="Publisher" EntitySet="Publishers" />
+            <End Role="Book" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Borrow_Book" Association="Self.FK_Borrow_Book">
+            <End Role="Book" EntitySet="Books" />
+            <End Role="Borrow" EntitySet="Borrows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Borrow_Reader" Association="Self.FK_Borrow_Reader">
+            <End Role="Reader" EntitySet="Readers" />
+            <End Role="Borrow" EntitySet="Borrows" />
+          </AssociationSet>
+          <AssociationSet Name="Book_Author" Association="Self.Book_Author">
+            <End Role="Author" EntitySet="Authors" />
+            <End Role="Book" EntitySet="Books" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="qlthuvienModelStoreContainer" CdmEntityContainer="qlthuvienEntities">
+          <EntitySetMapping Name="Authors">
+            <EntityTypeMapping TypeName="qlthuvienModel.Author">
+              <MappingFragment StoreEntitySet="Author">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Books">
+            <EntityTypeMapping TypeName="qlthuvienModel.Book">
+              <MappingFragment StoreEntitySet="Book">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="publisher_id" ColumnName="publisher_id" />
+                <ScalarProperty Name="published_date" ColumnName="published_date" />
+                <ScalarProperty Name="import_date" ColumnName="import_date" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="category_id" ColumnName="category_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Borrows">
+            <EntityTypeMapping TypeName="qlthuvienModel.Borrow">
+              <MappingFragment StoreEntitySet="Borrow">
+                <ScalarProperty Name="reader_id" ColumnName="reader_id" />
+                <ScalarProperty Name="book_id" ColumnName="book_id" />
+                <ScalarProperty Name="borrow_date" ColumnName="borrow_date" />
+                <ScalarProperty Name="return_date" ColumnName="return_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="qlthuvienModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="qlthuvienModel.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="fullname" ColumnName="fullname" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="birthday" ColumnName="birthday" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="id_card_number" ColumnName="id_card_number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Publishers">
+            <EntityTypeMapping TypeName="qlthuvienModel.Publisher">
+              <MappingFragment StoreEntitySet="Publisher">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Readers">
+            <EntityTypeMapping TypeName="qlthuvienModel.Reader">
+              <MappingFragment StoreEntitySet="Reader">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="fullname" ColumnName="fullname" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="birthday" ColumnName="birthday" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="is_member" ColumnName="is_member" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Book_Author" TypeName="qlthuvienModel.Book_Author" StoreEntitySet="Book_Author">
+            <EndProperty Name="Author">
+              <ScalarProperty Name="id" ColumnName="author_id" />
+            </EndProperty>
+            <EndProperty Name="Book">
+              <ScalarProperty Name="id" ColumnName="book_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
